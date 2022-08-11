@@ -2,9 +2,7 @@ package com.devsuperior.bds04.dto;
 
 import com.devsuperior.bds04.entities.Role;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class RoleDTO {
@@ -12,7 +10,7 @@ public class RoleDTO {
     private Long id;
     private String authority;
 
-    private Set<UserDTO> users = new HashSet<>();
+    private Set<ResponseUserDTO> users = new HashSet<>();
 
     public RoleDTO() {
     }
@@ -43,11 +41,11 @@ public class RoleDTO {
         this.authority = authority;
     }
 
-    public Set<UserDTO> getUsers() {
+    public Set<ResponseUserDTO> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<UserDTO> users) {
+    public void setUsers(Set<ResponseUserDTO> users) {
         this.users = users;
     }
 }

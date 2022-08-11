@@ -2,33 +2,29 @@ package com.devsuperior.bds04.dto;
 
 import com.devsuperior.bds04.entities.User;
 
-import javax.persistence.SecondaryTable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UserDTO {
+public class ResponseUserDTO {
 
     private Long id;
     private String email;
-    private String password;
 
     private Set<RoleDTO> rolesDTO = new HashSet<>();
 
-    public UserDTO() {
+    public ResponseUserDTO() {
     }
 
-    public UserDTO(Long id, String email, String password) {
+    public ResponseUserDTO(Long id, String email, String password) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
 
-    public UserDTO(User user) {
+    public ResponseUserDTO(User user) {
         id = user.getId();
         email = user.getEmail();
-        password = user.getPassword();
         rolesDTO = user.getRoles().stream().map(role -> new RoleDTO(role)).collect(Collectors.toSet());
     }
 
@@ -48,14 +44,6 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Set<RoleDTO> getRolesDTO() {
         return rolesDTO;
     }
@@ -63,8 +51,8 @@ public class UserDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDTO)) return false;
-        UserDTO userDTO = (UserDTO) o;
+        if (!(o instanceof ResponseUserDTO)) return false;
+        ResponseUserDTO userDTO = (ResponseUserDTO) o;
         return Objects.equals(getId(), userDTO.getId());
     }
 
