@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,16 +30,19 @@ public class CityService {
     @Autowired
     private CityRepository repository;
 
+    @Transactional(readOnly = true)
     public List<CityDTO> findAll(){
        return repository.findAll(Sort.by("name")).stream().map(City -> new CityDTO(City)).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CityDTO findById(Long id){
         Optional<City> City = repository.findById(id);
         CityDTO dto = new CityDTO(City.orElseThrow(() -> new ResourceNotFoundException("Resource with id " + id + "not found")));
         return dto;
     }
 
+    @Transactional
     public CityDTO insert(CityDTO dto){
         City city = new City();
         city.setName(dto.getName());
