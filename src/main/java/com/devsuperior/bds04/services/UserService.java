@@ -14,9 +14,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -27,8 +30,8 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public Page<ResponseUserDTO> findAllPaged(Pageable pageable){
-       return repository.findAll(pageable).map(user -> new ResponseUserDTO(user));
+    public List<ResponseUserDTO> findAll(){
+       return repository.findAll(Sort.by("name")).stream().map(user -> new ResponseUserDTO(user)).collect(Collectors.toList());
     }
 
     public ResponseUserDTO findById(Long id){
