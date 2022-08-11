@@ -1,33 +1,35 @@
-package com.devsuperior.bds04.entities;
+package com.devsuperior.bds04.dto;
 
-import javax.persistence.*;
+import com.devsuperior.bds04.entities.User;
+
+import javax.persistence.SecondaryTable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "tb_user")
-public class User {
+public class UserDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tb_user_role",
-    joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<RoleDTO> rolesDTO = new HashSet<>();
 
-    public User() {
+    public UserDTO() {
     }
 
-    public User(Long id, String email, String password) {
+    public UserDTO(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public UserDTO(User user) {
+        id = user.getId();
+        email = user.getEmail();
+        password = user.getPassword();
+        rolesDTO = user.getRoles().stream().map(role -> new RoleDTO(role)).collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -54,16 +56,16 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<RoleDTO> getRolesDTO() {
+        return rolesDTO;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(getId(), user.getId());
+        if (!(o instanceof UserDTO)) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return Objects.equals(getId(), userDTO.getId());
     }
 
     @Override
