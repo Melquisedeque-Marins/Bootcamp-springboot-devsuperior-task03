@@ -3,6 +3,8 @@ package com.devsuperior.bds04.controllers;
 import com.devsuperior.bds04.dto.EventDTO;
 import com.devsuperior.bds04.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,16 +14,16 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Events")
+@RequestMapping("/events")
 public class EventController {
 
     @Autowired
     private EventService service;
 
     @GetMapping
-    public ResponseEntity<List<EventDTO>> findAll(){
-        List<EventDTO> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<Page<EventDTO>> findAll(Pageable pageable){
+        Page<EventDTO> eventPage = service.findAll(pageable);
+        return ResponseEntity.ok().body(eventPage);
     }
 
     @GetMapping("/{id}")

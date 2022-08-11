@@ -11,6 +11,8 @@ import com.devsuperior.bds04.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +25,14 @@ import java.util.stream.Collectors;
 public class EventService {
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private CityRepository cityRepository;
 
     @Autowired
     private EventRepository repository;
 
     @Transactional(readOnly = true)
-    public List<EventDTO> findAll(){
-       return repository.findAll(Sort.by("name")).stream().map(Event -> new EventDTO(Event)).collect(Collectors.toList());
+    public Page<EventDTO> findAll(Pageable pageable){
+       return repository.findAll(pageable).map(Event -> new EventDTO(Event));
     }
 
     @Transactional(readOnly = true)

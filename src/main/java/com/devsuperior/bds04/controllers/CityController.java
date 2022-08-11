@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Cities")
+@RequestMapping("/cities")
 public class CityController {
 
     @Autowired

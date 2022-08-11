@@ -25,9 +25,6 @@ import java.util.stream.Collectors;
 public class CityService {
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private CityRepository repository;
 
     @Transactional(readOnly = true)
