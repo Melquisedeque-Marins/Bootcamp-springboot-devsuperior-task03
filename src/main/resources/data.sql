@@ -1,7 +1,7 @@
 INSERT INTO tb_user(email, password) VALUES ('ana@gmail.com', '123456');
 INSERT INTO tb_user(email, password) VALUES ('bob@gmail.com', '123456');
 
-INSERT INTO tb_role(authority) VALUES ('ROLE_OPERATOR');
+INSERT INTO tb_role(authority) VALUES ('ROLE_CLIENT');
 INSERT INTO tb_role(authority) VALUES ('ROLE_ADMIN');
 
 INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
