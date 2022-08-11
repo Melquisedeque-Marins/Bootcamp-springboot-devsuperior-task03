@@ -9,12 +9,18 @@ import com.devsuperior.bds04.repository.RoleRepository;
 import com.devsuperior.bds04.repository.UserRepository;
 import com.devsuperior.bds04.services.exception.DatabaseException;
 import com.devsuperior.bds04.services.exception.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +28,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
     private UserRepository repository;
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public List<ResponseUserDTO> findAll(){
        return repository.findAll(Sort.by("name")).stream().map(user -> new ResponseUserDTO(user)).collect(Collectors.toList());
@@ -43,6 +54,7 @@ public class UserService {
     public ResponseUserDTO insert(InsertUserDTO dto){
         User user = new User();
         convertDtoToUser(dto, user);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         User newUser = repository.save(user);
         return new ResponseUserDTO(user);
     }
@@ -66,5 +78,16 @@ public class UserService {
             Role role = roleRepository.getOne(roleDTO.getId());
             user.getRoles().add(role);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repository.findByEmail(username);
+            if(user == null){
+                logger.error("User not found :" + username);
+                throw new UsernameNotFoundException("email not found");
+            }
+            logger.info("User fount: " + username);
+            return user;
     }
 }
