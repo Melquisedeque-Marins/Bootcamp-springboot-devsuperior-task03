@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<EventDTO> insert(@RequestBody EventDTO dto){
+    public ResponseEntity<EventDTO> insert(@Valid @RequestBody EventDTO dto){
         EventDTO Event = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(Event.getId()).toUri();
         return ResponseEntity.created(uri).body(Event);
